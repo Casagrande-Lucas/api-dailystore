@@ -28,7 +28,7 @@ class AuthController extends Controller
         }
 
         $user = $request->user();
-        $tokenResult = $user->createToken('procedure', ['procedure-exec'], Carbon::now()->addHours(24));
+        $tokenResult = $user->createToken('store', ['auth'], Carbon::now()->addHours(24));
         $token = $tokenResult->plainTextToken;
 
         return response()->json(['success' => true, 'message' => 'Usuário autenticado com sucesso.', 'data' => ['access_token' =>$token, 'token_type' => 'Bearer']], options: JSON_UNESCAPED_UNICODE);
