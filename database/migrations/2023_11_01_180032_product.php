@@ -11,7 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
+        Schema::create('products', function (Blueprint $table) {
+            $table->uuid('id')->unique();
+            $table->string('id_stock')->unique();
+            $table->string('name', 55);
+            $table->integer('amount', unsigned:true)->default(0);
+            $table->float('value', unsigned:true)->default(0.00);
+            $table->boolean('active')->default(true);
+            $table->timestamps();
+        });
     }
 
     /**
@@ -19,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::drop('products');
     }
 };
