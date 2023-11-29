@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ProductController;
+use App\Http\Api\AuthController;
+use App\Http\Api\ProductApi;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,11 +17,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
     Route::prefix('auth')->group(function () {
-        Route::post('login', [AuthController::class, 'login'])->name('auth-login');
+        Route::post('home', [AuthController::class, 'login'])->name('auth-home');
         Route::post('logout', [AuthController::class, 'logout'])->name('auth-logout');
     });
 
-    Route::prefix('stock')->middleware(['auth:sanctum', 'abilities:stock-exec'])->group(function () {
-        Route::resource('product',ProductController::class);
+    Route::middleware(['auth:sanctum'])->group(function () {
+        Route::prefix('stock')->group(function () {
+            Route::prefix('products')->group(function () {
+                Route::middleware(['abilities:products-list'])->get('list', [ProductApi::class, 'list'])->name('products->list');
+            });
+        });
     });
 });
