@@ -27,7 +27,7 @@ class AuthController extends Controller
 
         if(!Auth::attempt(request(['email','password'])))
         {
-            return view('login/index')->withErrors(['errors' => 'E-Mail ou Senha incorretos!']);
+            return view('home/login')->withErrors(['errors' => 'E-Mail ou Senha incorretos!']);
         }
 
         if ($request->input('email') === 'admin@dailycstore.com.br') {

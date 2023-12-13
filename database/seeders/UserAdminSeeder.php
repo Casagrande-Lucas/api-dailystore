@@ -20,8 +20,8 @@ class UserAdminSeeder extends Seeder
 
         try {
             (new UserRepository($data))->create();
-        } catch (\Throwable) {
-            exit;
+        } catch (\Throwable $e) {
+            print $e;
         }
     }
 }

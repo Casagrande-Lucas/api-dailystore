@@ -19,10 +19,11 @@ class UserRepository extends User
      *
      * @throws Throwable
      */
-    public function create(): void
+    public function create(): User
     {
         $this->attributes['created_at'] = Carbon::now()->format('Y-m-d H:i');
         $this->attributes['updated_at'] = Carbon::now()->format('Y-m-d H:i');
         $this->saveOrFail();
+        return $this;
     }
 }

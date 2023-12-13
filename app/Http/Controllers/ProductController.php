@@ -4,13 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector;
+use Illuminate\Support\Str;
 use Illuminate\View\View;
 
 class ProductController extends Controller
 {
-    private int $pageLength = 50;
+    private int $pageLength = 100;
     /**
      * Display a listing of the resource.
      */
@@ -26,27 +28,34 @@ class ProductController extends Controller
      */
     public function create(): View
     {
-        return view('product/create');
+        return view('products/create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => 'required',
-            'amount' => 'min:0',
-            'value' => 'min:0.00',
+            'name' => 'required|string',
+            'size' => 'required|string|nullable',
+            'color' => 'required|string|nullable',
+            'amount' => 'required|min:0',
+            'value' => 'required|min:0.00',
         ]);
 
+        $data = $request->all();
+
+        $data['id'] = Str::orderedUuid();
+        $data['value'] = str_replace(',', '.', str_replace('.', '', $data['value']));
+
         try {
-            (new Product($request->all()))->saveOrFail();
+            (new Product($data))->saveOrFail();
         } catch (\Throwable $e) {
-            return redirect('product/create')->withErrors(['error' => $e->getMessage()])->withInput();
+            return redirect('products/create')->withErrors(['error' => $e->getMessage()])->withInput();
         }
 
-        return redirect('product/create');
+        return redirect('products/create')->withErrors(['success' => 'Produto criado!']);
     }
 
     /**
@@ -60,7 +69,7 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Product $product): Redirector|View
+    public function edit(Product $product): View
     {
         return view('products/edit', ['product' => $product]);
     }
@@ -68,21 +77,29 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Product $product, Request $request)
+    public function update(Product $product, Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => 'required',
-            'amount' => 'required|min:0',
-            'value' => 'required|min:0.00',
+            'name' => 'string|nullable',
+            'size' => 'string|nullable',
+            'color' => 'string|nullable',
+            'amount' => 'min:0|nullable',
+            'value' => 'min:0.00|nullable',
         ]);
 
-        try {
-            $product->updateOrFail($request->all());
-        } catch (\Throwable $e) {
-            return redirect("products/{$product->id}/edit")->withErrors('error', 'Erro ao editar o produto: ' . $e->getMessage())->withInput();
+        $data = $request->all();
+
+        if (!empty($data['value'])) {
+            $data['value'] = str_replace(',', '.', str_replace('.', '', $data['value']));
         }
 
-        return redirect("products/{$product->id}/edit")->withInput();
+        try {
+            $product->updateOrFail($data);
+        } catch (\Throwable) {
+            return redirect("products/{$product->id}/edit")->withErrors(['error' => 'Erro ao atualizar o produto!'])->withInput();
+        }
+
+        return redirect("products/$product->id/edit")->withErrors(['success' => 'Produto atualizado com sucesso!'])->withInput();
     }
 
     /**
