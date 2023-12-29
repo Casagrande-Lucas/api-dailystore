@@ -42,7 +42,7 @@ class ImportListProducts extends Command
             $productData = array_combine($headers, explode(';', $row[0]));
 
             try {
-                Product::created([
+                Product::create([
                     'id' => Str::orderedUuid(),
                     'name' => $productData['Nome'],
                     'color' => $productData['Cor'],
