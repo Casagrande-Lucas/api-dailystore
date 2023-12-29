@@ -42,7 +42,6 @@ class ImportListProducts extends Command
 
             $productData = array_combine($headers, explode(';', $row[0]));
 
-            dd($productData);
             try {
                 Product::create([
                     'id' => Str::orderedUuid(),
