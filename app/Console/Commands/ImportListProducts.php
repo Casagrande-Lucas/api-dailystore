@@ -41,17 +41,23 @@ class ImportListProducts extends Command
 
             $productData = array_combine($headers, explode(';', $row[0]));
 
-            Product::created([
-                'id' => Str::orderedUuid(),
-                'name' => $productData['Nome'],
-                'color' => $productData['Cor'],
-                'size' => $productData['Tamanho'],
-                'value' => $productData['Preco'],
-                'amount' => $productData['Estoque'],
-                'active' => true,
-                'created_at' => \Carbon\Carbon::now(),
-                'updated_at' => \Carbon\Carbon::now(),
-            ]);
+            try {
+                Product::created([
+                    'id' => Str::orderedUuid(),
+                    'name' => $productData['Nome'],
+                    'color' => $productData['Cor'],
+                    'size' => $productData['Tamanho'],
+                    'value' => $productData['Preco'],
+                    'amount' => $productData['Estoque'],
+                    'active' => true,
+                    'created_at' => \Carbon\Carbon::now(),
+                    'updated_at' => \Carbon\Carbon::now(),
+                ]);
+            } catch (\Throwable $exception) {
+                $this->info($exception);
+                exit;
+            }
+
         }
 
         $this->info('csv import success.');
