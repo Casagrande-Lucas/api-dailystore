@@ -18,7 +18,7 @@ class ProductController extends Controller
      */
     public function index(): View
     {
-        $products = Product::where('active', true)->orderBy('name')->paginate($this->pageLength);
+        $products = Product::where('active', true)->orderByRaw('name, size, color')->paginate($this->pageLength);
 
         return view('products/index', ['products' => $products]);
     }
