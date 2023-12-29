@@ -12,7 +12,7 @@ use Illuminate\View\View;
 
 class ProductController extends Controller
 {
-    private int $pageLength = 100;
+    private int $pageLength = 1000;
     /**
      * Display a listing of the resource.
      */
