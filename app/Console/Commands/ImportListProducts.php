@@ -39,14 +39,12 @@ class ImportListProducts extends Command
 
         $headers = explode(';', array_shift($data)[0]);
 
-        $sql = "INSERT INTO products (name, color, size, value, amount, created_at, updated_at) VALUES ";
-
-        $count = 0;
-        $pluck = 50;
+        $sql = "INSERT INTO products (id, name, color, size, value, amount, created_at, updated_at) VALUES ";
 
         foreach ($data as $row) {
             $productData = array_combine($headers, explode(';', $row[0]));
 
+            $id = Str::orderedUuid();
             $name = $productData['name'];
             $color = $productData['color'];
             $size = $productData['size'];
@@ -55,16 +53,13 @@ class ImportListProducts extends Command
             $createdAt = Carbon::now()->format('Y-m-d H:i:s');
             $updatedAt = Carbon::now()->format('Y-m-d H:i:s');
 
-            $sql .= "('$name', '$color', '$size', $value, $amount, '$createdAt', '$updatedAt'), ";
+            $sql .= "('$id', '$name', '$color', '$size', $value, $amount, '$createdAt', '$updatedAt'), ";
 
-            $count++;
-
-            if ($count >= $pluck) {
-                $sql = rtrim($sql, ", ");
-                DB::select($sql);
-                $pluck += 50;
-            }
         }
+
+        $sql = rtrim($sql, ", ");
+
+        DB::select($sql);
 
         $this->info('csv import success.');
     }
