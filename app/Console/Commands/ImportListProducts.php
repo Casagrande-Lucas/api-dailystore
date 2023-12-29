@@ -39,24 +39,27 @@ class ImportListProducts extends Command
         $headers = explode(';', array_shift($data)[0]);
 
         foreach ($data as $row) {
+
             $productData = array_combine($headers, explode(';', $row[0]));
 
+            dd($productData);
+            try {
+                Product::create([
+                    'id' => Str::orderedUuid(),
+                    'name' => $productData['Nome'],
+                    'color' => $productData['Cor'],
+                    'size' => $productData['Tamanho'],
+                    'value' => $productData['Preco'],
+                    'amount' => $productData['Estoque'],
+                    'active' => true,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ]);
+            } catch (\Throwable $exception) {
+                $this->info($exception);
+                exit;
+            }
 
-            $decodeUnicode = function ($value) {
-                return json_decode('"' . $value . '"');
-            };
-
-            Product::create([
-                'id' => Str::orderedUuid(),
-                'name' => $decodeUnicode($productData['Nome']),
-                'color' => $decodeUnicode($productData['Cor']),
-                'size' => $decodeUnicode($productData['Tamanho']),
-                'value' => $productData['Preco'],
-                'amount' => $decodeUnicode($productData['Estoque']),
-                'active' => true,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ]);
         }
 
         $this->info('csv import success.');
