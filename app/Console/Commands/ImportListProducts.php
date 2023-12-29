@@ -58,7 +58,7 @@ class ImportListProducts extends Command
 
         $sql = rtrim($sql, ", ");
 
-        DB::statement($sql);
+        DB::select($sql);
 
         $this->info('csv import success.');
     }
