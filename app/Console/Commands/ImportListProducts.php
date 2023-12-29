@@ -43,7 +43,7 @@ class ImportListProducts extends Command
 
         $count = 0;
         $pluck = 50;
-        
+
         foreach ($data as $row) {
             $productData = array_combine($headers, explode(';', $row[0]));
 
@@ -61,7 +61,7 @@ class ImportListProducts extends Command
 
             if ($count >= $pluck) {
                 $sql = rtrim($sql, ", ");
-                //DB::select($sql);
+                DB::select($sql);
                 $pluck += 50;
             }
         }
