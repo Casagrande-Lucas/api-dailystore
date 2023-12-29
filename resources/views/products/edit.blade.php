@@ -43,13 +43,13 @@
 
                             @can('products_crud_admin')
                                 <div class="form-group">
-                                    <label for="size">Nome do Produto:</label>
+                                    <label for="size">Tamanho do Produto:</label>
                                     <input type="text" class="form-control" id="size" name="size"
                                            value="{{ $product->size }}" required>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="color">Nome do Produto:</label>
+                                    <label for="color">Cor do Produto:</label>
                                     <input type="text" class="form-control" id="color" name="color"
                                            value="{{ $product->color }}" required>
                                 </div>
