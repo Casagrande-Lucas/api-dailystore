@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use App\Models\Product;
 use App\Services\ServiceCsv;
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 
 class ImportListProducts extends Command
 {
@@ -41,6 +42,7 @@ class ImportListProducts extends Command
             $productData = array_combine($headers, explode(';', $row[0]));
 
             Product::created([
+                'id' => Str::orderedUuid(),
                 'name' => $productData['Nome'],
                 'color' => $productData['Cor'],
                 'size' => $productData['Tamanho'],
