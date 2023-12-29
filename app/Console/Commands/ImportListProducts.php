@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Services\ServiceCsv;
 use Illuminate\Console\Command;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class ImportListProducts extends Command
@@ -38,28 +39,26 @@ class ImportListProducts extends Command
 
         $headers = explode(';', array_shift($data)[0]);
 
+        $sql = "INSERT INTO products (name, color, size, value, amount, created_at, updated_at) VALUES ";
+
         foreach ($data as $row) {
 
             $productData = array_combine($headers, explode(';', $row[0]));
 
-            try {
-                Product::create([
-                    'id' => Str::orderedUuid(),
-                    'name' => $productData['Nome'],
-                    'color' => $productData['Cor'],
-                    'size' => $productData['Tamanho'],
-                    'value' => $productData['Preco'],
-                    'amount' => $productData['Estoque'],
-                    'active' => true,
-                    'created_at' => Carbon::now(),
-                    'updated_at' => Carbon::now(),
-                ]);
-            } catch (\Throwable $exception) {
-                $this->info($exception);
-                exit;
-            }
+            $name = $productData['name'];
+            $color = $productData['color'];
+            $size = $productData['size'];
+            $value = $productData['value'];
+            $amount = $productData['amount'];
+            $createdAt = Carbon::now()->format('Y-m-d H:i:s');
+            $updatedAt = Carbon::now()->format('Y-m-d H:i:s');
 
+            $sql .= "('$name', '$color', '$size', $value, $amount, '$createdAt', '$updatedAt'), ";
         }
+
+        $sql = rtrim($sql, ", ");
+
+        DB::statement($sql);
 
         $this->info('csv import success.');
     }
