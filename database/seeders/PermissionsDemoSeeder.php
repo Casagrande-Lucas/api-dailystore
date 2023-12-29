@@ -39,18 +39,32 @@ class PermissionsDemoSeeder extends Seeder
 
         $role3 = Role::create(['name' => 'Super-Admin']);
 
-        $data = [
-            'name' => 'Admin',
-            'email' =>  'admin@dailycstore.com.br',
-            'email_verified_at' => now(),
-            'password' => 'D@ily23$$!',
-        ];
+        $user = \App\Models\User::factory()->create([
+            'name' => 'Raissa',
+            'email' => 'raissa@dailycstore.com.br',
+            'password' => 'R@issa23$$!'
+        ]);
+        $user->assignRole($role1);
 
-        try {
-            $userAdmin = (new UserRepository($data))->create();
-            $userAdmin->assignRole($role3);
-        } catch (\Throwable $e) {
-            print $e;
-        }
+        $user = \App\Models\User::factory()->create([
+            'name' => 'Camila',
+            'email' => 'camilabarrocalg@gmail.com',
+            'password' => 'C@mila23$$!'
+        ]);
+        $user->assignRole($role1);
+
+        $user = \App\Models\User::factory()->create([
+            'name' => 'Gabriel Macedo',
+            'email' => 'gabrielsm199@gmail.com',
+            'password' => 'D@ily23$$!'
+        ]);
+        $user->assignRole($role3);
+
+        $user = \App\Models\User::factory()->create([
+            'name' => 'Barabara Casagrande',
+            'email' => 'barbaraestilistawork@icloud.com',
+            'password' => 'D@ily23$$!'
+        ]);
+        $user->assignRole($role3);
     }
 }
