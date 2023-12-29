@@ -48,6 +48,7 @@ class ImportListProducts extends Command
                 'size' => $productData['Tamanho'],
                 'value' => $productData['Preco'],
                 'amount' => $productData['Estoque'],
+                'active' => true,
                 'created_at' => \Carbon\Carbon::now(),
                 'updated_at' => \Carbon\Carbon::now(),
             ]);
